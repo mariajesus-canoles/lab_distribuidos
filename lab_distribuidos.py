@@ -12,6 +12,10 @@ auth.set_access_token(access_key, access_secret)
 # Creating an API object 
 api = tweepy.API(auth)
 
+public_tweets = api.home_timeline()
+for tweet in public_tweets:
+    print(tweet.text)
+
 # ----- Extract data for a particular user mention -----
 '''
 username_tweets = tweepy.Cursor(api.search_tweets, q="@usach", tweet_mode='extended').items(3)
@@ -35,7 +39,7 @@ for tweet in hashtag_tweets:
     print("\n")
     text = tweet._json["full_text"]
     print(text)
-'''
+
 
  
 # ----- Extract data tweets after a mentioned date -----
@@ -46,3 +50,4 @@ for tweet in date_tweets:
     print("\n")
     text = tweet._json["full_text"]
     print(text)
+'''
