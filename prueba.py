@@ -40,7 +40,6 @@ def conectarBD(nombreBD, userBD, pswBD, hostBD, portBD = "5432"):
 def crearTabla(nombreBD, userBD, pswBD, hostBD, portBD = "5432"):
     sql = (
     """
-    DROP TABLE IF EXISTS tweet CASCADE;
     CREATE TABLE IF NOT EXISTS tweet
     (
 	id SERIAL PRIMARY KEY,
@@ -73,11 +72,10 @@ def crearTabla(nombreBD, userBD, pswBD, hostBD, portBD = "5432"):
             print('\tDatabase connection closed.\n')
 
 def insertarInstancia(datos, nombreBD, userBD, pswBD, hostBD, portBD = "5432"):
-    sql = "insert into tweet(id, content) values (%s, %s)"
+    sql = "insert into tweet values (DEFAULT, %s)"
 
     conn = None
     try:
-        print("\tConectando con: ~", nombreBD, "~ de PostgreSQL...")
         conn = psycopg2.connect(database = nombreBD, user = userBD, password = pswBD, host = hostBD, port = portBD)
         cur = conn.cursor()
 
@@ -97,7 +95,6 @@ def insertarInstancia(datos, nombreBD, userBD, pswBD, hostBD, portBD = "5432"):
     finally:
         if conn is not None:
             conn.close()
-            print('\tDatabase connection closed.\n')
 
 def limpiarTabla(nombreBD, userBD, pswBD, hostBD, portBD = "5432"):
     sql = (
@@ -166,13 +163,12 @@ crearTabla(nombreBD, userBD, pswBD, host)
 limpiarTabla(nombreBD, userBD, pswBD, host)
 
 
-hashtag_tweets = tweepy.Cursor(api.search_tweets, q="#usach", tweet_mode='extended').items(50)
-identificador = 1
+hashtag_tweets = tweepy.Cursor(api.search_tweets, q="#usach", tweet_mode='extended').items(3)
 
 for tweet in hashtag_tweets:
     text = tweet._json["full_text"]
-    dato = (identificador, text)
+    dato = (text,)
     insertarInstancia(dato, nombreBD, userBD, pswBD, host)
-    identificador = identificador + 1
+
 
 

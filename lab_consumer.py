@@ -1,6 +1,100 @@
 from kafka import KafkaConsumer
 from json import loads
 from time import sleep
+import tweepy
+import psycopg2
+from psycopg2 import Error
+
+def crearTabla(nombreBD, userBD, pswBD, hostBD, portBD = "5432"):
+    sql = (
+    """
+    CREATE TABLE IF NOT EXISTS tweet
+    (
+	id SERIAL PRIMARY KEY,
+	content VARCHAR(350) NOT NULL
+    )
+    """)
+    
+    conn = None
+    try:
+        print("\tConectando con: ~", nombreBD, "~ de PostgreSQL...")
+        conn = psycopg2.connect(database = nombreBD, user = userBD, password = pswBD, host = hostBD, port = portBD)
+        cur = conn.cursor()
+
+        #Se crea la tabla
+        cur.execute(sql)
+
+        #Se cierra la comunicacion con PostgreSQL
+        cur.close()
+        print("\nLa tabla ha sido creada exitosamente.")
+
+        #Se almacenan los cambios
+        conn.commit()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+
+    finally:
+        if conn is not None:
+            conn.close()
+            print('\tDatabase connection closed.\n')
+
+def insertarInstancia(datos, nombreBD, userBD, pswBD, hostBD, portBD = "5432"):
+    sql = "insert into tweet values (DEFAULT, %s)"
+
+    conn = None
+    try:
+        conn = psycopg2.connect(database = nombreBD, user = userBD, password = pswBD, host = hostBD, port = portBD)
+        cur = conn.cursor()
+
+        #Se crea la tabla
+        cur.execute(sql, datos)
+
+        #Se cierra la comunicacion con PostgreSQL
+        cur.close()
+        print("\nEl dato ha sido insertado exitosamente.")
+
+        #Se almacenan los cambios
+        conn.commit()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+def limpiarTabla(nombreBD, userBD, pswBD, hostBD, portBD = "5432"):
+    sql = (
+    """
+    TRUNCATE TABLE tweet
+    RESTART IDENTITY;
+    """)
+
+    conn = None
+    try:
+        print("\tConectando con: ~", nombreBD, "~ de PostgreSQL...")
+        conn = psycopg2.connect(database = nombreBD, user = userBD, password = pswBD, host = hostBD, port = portBD)
+        cur = conn.cursor()
+
+        #Se crea la tabla
+        cur.execute(sql)
+
+        #Se cierra la comunicacion con PostgreSQL
+        cur.close()
+        print("\nLa tabla ha sido limpiada exitosamente.")
+
+        #Se almacenan los cambios
+        conn.commit()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+
+    finally:
+        if conn is not None:
+            conn.close()
+            print('\tDatabase connection closed.\n')
+
 
 '''
 In the script above we are defining a KafkaConsumer that contacts the server “localhost:9092 ” 
@@ -25,9 +119,25 @@ consumer = KafkaConsumer(
     value_deserializer=lambda x: loads(x.decode('utf-8'))
 )
 
+#Conexion a base de datos
+    #Parametros de la BD
+nombreBD = "distribuidos_twitter"
+userBD = "postgres"
+pswBD = "admin"
+host = "localhost"
+
+#Crear tabla base de datos
+crearTabla(nombreBD, userBD, pswBD, host)
+
+#Procedimientos
+limpiarTabla(nombreBD, userBD, pswBD, host)
+
+
 for event in consumer:
     event_data = event.value
     # Do whatever you want
     print("\n----------------TWEET----------------")
+    dato = (event_data,) #ESTA COMA ES IMPORTANTE PARA QUE EL INSERT FUNCIONE AUTOINCREMENTABLE
+    insertarInstancia(dato, nombreBD, userBD, pswBD, host)
     print(event_data)
     sleep(2)
