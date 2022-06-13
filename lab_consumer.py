@@ -136,6 +136,9 @@ limpiarTabla(nombreBD, userBD, pswBD, host)
 
 
 for event in consumer:
+    if(event.value['retweets'] < 0):
+        break
     dato = (event.value['content'], event.value['retweets'], event.value['favorites'],) #ESTA COMA ES IMPORTANTE PARA QUE EL INSERT FUNCIONE AUTOINCREMENTABLE
     insertarInstancia(dato, nombreBD, userBD, pswBD, host)
+    consumer.pause
     #sleep(0.1)

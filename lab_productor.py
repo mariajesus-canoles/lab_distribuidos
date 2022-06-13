@@ -49,3 +49,10 @@ for tweet in hashtag_tweets:
     if((contador % largo_paquete) == 0 and (contador != cantidad_tweets)):
           sleep(15)
     contador += 1
+
+#Señal de finalizacion
+data = {}
+data["content"] = "fin"
+data["retweets"] = -1
+data["favorites"] = -1
+producer.send('topic_test2', value=data)
