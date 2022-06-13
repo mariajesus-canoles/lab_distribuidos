@@ -18,9 +18,20 @@ auth.set_access_token(access_key, access_secret)
 api = tweepy.API(auth)
 
 # ----- Extract data for a particular hashtag -----
+'''
+cantidad_tweets = 3
 
-hashtag_tweets = tweepy.Cursor(api.search_tweets, q="#usach", tweet_mode='extended').items(5)
+hashtag_tweets = tweepy.Cursor(api.search_tweets, q="@usach", tweet_mode='extended').items(cantidad_tweets)
 
+for tweet in hashtag_tweets:
+    data = {}
+    data["content"] = tweet._json["full_text"]
+    data["retweets"] = tweet._json["retweet_count"]
+    data["favorites"] = tweet._json["favorite_count"]
+    #data = tweet._json["full_text"] + str(tweet._json["retweet_count"]) + str(tweet._json["favorite_count"])
+    print(json.dumps(data, indent = 2))
+    '''
+  
 '''
 for tweet in hashtag_tweets:
     print("\n")
@@ -44,7 +55,24 @@ producer = KafkaProducer(
     value_serializer=lambda x: dumps(x).encode('utf-8')
 )
 
+cantidad_tweets = 3
 
+hashtag_tweets = tweepy.Cursor(api.search_tweets, q="@usach", tweet_mode='extended').items(cantidad_tweets)
+
+j = 0
+for tweet in hashtag_tweets:
+    print("Iteration", j)
+    data = {}
+    data["content"] = tweet._json["full_text"]
+    data["retweets"] = tweet._json["retweet_count"]
+    data["favorites"] = tweet._json["favorite_count"]
+    #data = tweet._json["full_text"] + str(tweet._json["retweet_count"]) + str(tweet._json["favorite_count"])
+    #print(json.dumps(data, indent = 2))
+    producer.send('topic_test2', value=data)
+    sleep(0.5)
+    j += 1
+
+'''
 j = 0
 for tweet in hashtag_tweets:
     print("Iteration", j)
@@ -53,4 +81,4 @@ for tweet in hashtag_tweets:
     sleep(0.5)
     j = j+1
 
-
+'''

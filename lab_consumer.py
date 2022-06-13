@@ -134,6 +134,19 @@ limpiarTabla(nombreBD, userBD, pswBD, host)
 
 
 for event in consumer:
+    print(event.value['content'])
+    print(event.value['retweets'])
+    print(event.value['favorites'])
+    #event_data = event.value
+    # Do whatever you want
+    #print("\n----------------TWEET----------------")
+    #dato = (event_data,) #ESTA COMA ES IMPORTANTE PARA QUE EL INSERT FUNCIONE AUTOINCREMENTABLE
+    #insertarInstancia(dato, nombreBD, userBD, pswBD, host)
+    #print(event_data)
+    sleep(2)
+
+'''
+for event in consumer:
     event_data = event.value
     # Do whatever you want
     print("\n----------------TWEET----------------")
@@ -141,3 +154,4 @@ for event in consumer:
     insertarInstancia(dato, nombreBD, userBD, pswBD, host)
     print(event_data)
     sleep(2)
+'''
