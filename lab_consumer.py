@@ -11,7 +11,7 @@ def crearTabla(nombreBD, userBD, pswBD, hostBD, portBD = "5432"):
     CREATE TABLE IF NOT EXISTS tweet
     (
 	id SERIAL PRIMARY KEY,
-	content VARCHAR(350) NOT NULL,
+	content VARCHAR(500) NOT NULL,
     retweets INT NOT NULL,
     favorites INT NOT NULL
     )
@@ -138,4 +138,4 @@ limpiarTabla(nombreBD, userBD, pswBD, host)
 for event in consumer:
     dato = (event.value['content'], event.value['retweets'], event.value['favorites'],) #ESTA COMA ES IMPORTANTE PARA QUE EL INSERT FUNCIONE AUTOINCREMENTABLE
     insertarInstancia(dato, nombreBD, userBD, pswBD, host)
-    sleep(2)
+    #sleep(0.1)

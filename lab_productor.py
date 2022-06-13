@@ -18,7 +18,7 @@ auth.set_access_token(access_key, access_secret)
 api = tweepy.API(auth)
 
 # ----- Extract data for a particular hashtag -----
-cantidad_tweets = 3
+cantidad_tweets = 20
 
 hashtag_tweets = tweepy.Cursor(api.search_tweets, q="@usach", tweet_mode='extended').items(cantidad_tweets)
 
@@ -31,20 +31,21 @@ hashtag_tweets = tweepy.Cursor(api.search_tweets, q="@usach", tweet_mode='extend
   iteration as data. Instead of the couter, you can send anything.
 '''
 
-
-
 producer = KafkaProducer(
     bootstrap_servers=['localhost:9092'],
     value_serializer=lambda x: dumps(x).encode('utf-8')
 )
 
-j = 0
+contador = 1
+largo_paquete = 10
+
 for tweet in hashtag_tweets:
-    print("Iteration", j)
     data = {}
     data["content"] = tweet._json["full_text"]
     data["retweets"] = tweet._json["retweet_count"]
     data["favorites"] = tweet._json["favorite_count"]
     producer.send('topic_test2', value=data)
     sleep(0.5)
-    j += 1
+    if((contador % largo_paquete) == 0 and (contador != cantidad_tweets)):
+          sleep(15)
+    contador += 1
