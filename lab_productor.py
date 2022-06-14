@@ -44,7 +44,10 @@ for tweet in hashtag_tweets:
     data["content"] = tweet._json["full_text"]
     data["retweets"] = tweet._json["retweet_count"]
     data["favorites"] = tweet._json["favorite_count"]
-    producer.send('topic_test2', value=data)
+    producer.send('topic_test2', value=data)  #AQUI DEBERÍA DECLARAR LA PARTICION A LA QUE VA
+    #IDEALMENTE HACER UN LOOP INTERCALADO; MANDAR 1 Y 1 (producer.send tiene un atributo llamado "particion")
+    #HAY QUE CONFIGURAR DOCKER-COMPOSE-EXPOSE: KAFKA_CREATE_TOPICS: "topic_test:1:1" CAMBIAR POR KAFKA_CREATE_TOPICS: "topic_test:2:1"
+    #Formato-> "nombre_topico:cantidad_particiones:cantidad_replicas"
     sleep(0.5)
     if((contador % largo_paquete) == 0 and (contador != cantidad_tweets)):
           sleep(15)
@@ -56,3 +59,7 @@ data["content"] = "fin"
 data["retweets"] = -1
 data["favorites"] = -1
 producer.send('topic_test2', value=data)
+
+#await server.aioproducer.send_and_wait(topic_name1, json.dumps(data.dict()).encode("ascii"))
+#await server.aioproducer.send_and_wait(topic_name2, json.dumps(data.dict()).encode("ascii"))
+#ASI LO HIZO EL NICO, PERO CON OTRA LIBRERÍA, TENER EN CUENTA...

@@ -136,9 +136,10 @@ limpiarTabla(nombreBD, userBD, pswBD, host)
 
 
 for event in consumer:
+    #aqui debería buscar como consumir desde una particion en específico; quizas no es necesario, bastaría con abrir dos veces este archivo
+    # y kafka (zookeeper) realiza la asignación por debajo
     if(event.value['retweets'] < 0):
         break
     dato = (event.value['content'], event.value['retweets'], event.value['favorites'],) #ESTA COMA ES IMPORTANTE PARA QUE EL INSERT FUNCIONE AUTOINCREMENTABLE
     insertarInstancia(dato, nombreBD, userBD, pswBD, host)
     consumer.pause
-    #sleep(0.1)
