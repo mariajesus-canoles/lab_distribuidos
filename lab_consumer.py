@@ -142,4 +142,4 @@ for event in consumer:
         break
     dato = (event.value['content'], event.value['retweets'], event.value['favorites'],) #ESTA COMA ES IMPORTANTE PARA QUE EL INSERT FUNCIONE AUTOINCREMENTABLE
     insertarInstancia(dato, nombreBD, userBD, pswBD, host)
-    consumer.pause
+consumer.pause
