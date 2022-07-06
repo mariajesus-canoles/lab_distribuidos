@@ -1,0 +1,4 @@
+https://es.reactjs.org/docs/create-a-new-react-app.html
+
+instalar axios en la consola: npm install axios (esto sirve para poder consumir rutas desde el
+frontend)
