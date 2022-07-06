@@ -3,8 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import Navigation from './components/Navigation'
-import ListProducts from './components/ListProducts'
-import CreateProduct from './components/CreateProduct'
+import ListTweets from './components/ListTweets'
+import CreateTweet from './components/CreateTweet'
 
 import './App.css';
 
@@ -13,8 +13,8 @@ function App() {
     <Router>
       <Navigation />
       <div className="container p-4">
-        <Route path="/" exact component={ListProducts} />
-        <Route path="/create" component={CreateProduct} />
+        <Route path="/" exact component={ListTweets} />
+        <Route path="/create" component={CreateTweet} />
       </div>
     </Router>
   );

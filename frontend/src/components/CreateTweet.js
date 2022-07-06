@@ -1,43 +1,39 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 
-export default class CreateProduct extends Component {
+export default class CreateTweet extends Component {
 
     state = {
-        name: '',
-        expiration_date: '',
-        category: false,
-        price: '',
-        delete: false
+        content: '',
+        retweets: '',
+        favorites: ''
     }
 
 
 
-    onChangename = e => {
+    onChangeContent = e => {
         this.setState({
-            name: e.target.value
+            content: e.target.value
         })
     }
-    onChangePrice = e => {
+    onChangeFavorites = e => {
         this.setState({
-            price: e.target.value
+            favorites: e.target.value
         })
     }
-    onChangeDate = e => {
+    onChangeRetweets = e => {
         this.setState({
-            expiration_date: e.target.value
+            retweets: e.target.value
         })
     }
     onSubmit = async (e) => {
         e.preventDefault();
-        await axios.post('http://137.184.109.235:8082/product', {
-            name: this.state.name,
-            category: this.state.category,
-            expiration_date: this.state.expiration_date,
-            price: this.state.price,
-            delete: this.state.delete
+        await axios.post('http://localhost:8082/tweet', {
+            content: this.state.content,
+            retweets: this.state.retweets,
+            favorites: this.state.favorites
         });
-        //this.setState({ name: 'kdkddk' });
+        //this.setState({ content: 'kdkddk' });
 
     }
 
@@ -46,29 +42,29 @@ export default class CreateProduct extends Component {
             <div className="row">
                 <div className="col-md-4">
                     <div className="card card-body">
-                        <h3>Create New Product</h3>
+                        <h3>Create New Tweet</h3>
                         <form onSubmit={this.onSubmit}>
                             <div className="form-group">
                                 <input
                                     className="form-control"
-                                    value={this.state.name}
+                                    value={this.state.content}
                                     type="text"
-                                    onChange={this.onChangename}
-                                    placeholder='Nombre'
+                                    onChange={this.onChangeContent}
+                                    placeholder='Contenido'
                                 />
                                 <input
                                     className="form-control"
-                                    value={this.state.price}
+                                    value={this.state.favorites}
                                     type="text"
-                                    onChange={this.onChangePrice}
-                                    placeholder='Precio'
+                                    onChange={this.onChangeFavorites}
+                                    placeholder='Likes'
                                 />
                                 <input
                                     className="form-control"
-                                    value={this.state.expiration_date}
+                                    value={this.state.retweets}
                                     type="text"
-                                    onChange={this.onChangeDate}
-                                    placeholder='yyyy-mm-dd'
+                                    onChange={this.onChangeRetweets}
+                                    placeholder='Retweets'
                                 />
                             </div>
                             <button type="submit" className="btn btn-primary">
